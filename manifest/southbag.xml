@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Southbag Mobile OS local manifest.
+     Drop this file into .repo/local_manifests/ after `repo init`
+     against the LineageOS manifest, branch lineage-24.0.
+
+     The device tree and kernel are pinned here explicitly instead of
+     relying on `breakfast`/`roomservice`: on lineage-24.0, breakfast
+     hardcodes the `lineage_` product prefix (vendor/lineage/build/envsetup.sh)
+     and roomservice only resolves dependencies for lineage_* products,
+     so neither fetches device repos for the southbag_* product. -->
+<manifest>
+
+  <remote  name="lineage"
+           fetch="https://github.com/LineageOS"
+           revision="lineage-24.0" />
+  <remote  name="themuppets"
+           fetch="https://github.com/TheMuppets"
+           revision="lineage-24.0" />
+  <remote  name="southbag"
+           fetch="https://github.com/SouthbagHQ"
+           revision="main" />
+
+  <!-- Pixel 4a device tree and kernel (same repos breakfast would fetch) -->
+  <project name="android_device_google_sunfish"
+           path="device/google/sunfish"
+           remote="lineage" />
+  <project name="android_kernel_google_msm-4.14"
+           path="kernel/google/msm-4.14"
+           remote="lineage" />
+
+  <!-- Proprietary vendor blobs for the Pixel 4a, mirrored by TheMuppets.
+       These are prebuilt proprietary Google binaries; see docs/BUILD.md
+       for provenance and licensing notes. -->
+  <project name="proprietary_vendor_google_sunfish"
+           path="vendor/google/sunfish"
+           remote="themuppets" />
+
+  <!-- This repository, checked out where the build system expects it -->
+  <project name="southbag-mobile-os"
+           path="vendor/southbag"
+           remote="southbag" />
+
+</manifest>
