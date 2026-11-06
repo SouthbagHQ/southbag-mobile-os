@@ -1,0 +1,42 @@
+name: southbag-mobile-os
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  # Static scaffold checks. These run on GitHub-hosted runners.
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run static validation
+        run: tests/validate.sh
+
+  # Actual OS build. An AOSP/LineageOS build needs ~64 GB RAM and ~400 GB of
+  # SSD storage, far beyond any GitHub-hosted runner, so this job runs only
+  # on a self-hosted runner labelled `southbag-build`, and only on manual
+  # dispatch. No such runner exists yet.
+  build:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: [self-hosted, southbag-build]
+    timeout-minutes: 720
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install repo tool
+        run: |
+          mkdir -p ~/bin
+          curl -fsSL https://storage.googleapis.com/git-repo-downloads/repo -o ~/bin/repo
+          chmod +x ~/bin/repo
+          echo "$HOME/bin" >> "$GITHUB_PATH"
+      - name: Sync and build
+        run: scripts/build.sh "$RUNNER_WORKSPACE/southbag-build-tree"
+      - name: Upload images
+        uses: actions/upload-artifact@v4
+        with:
+          name: southbag-sunfish-images
+          path: |
+            ${{ env.RUNNER_WORKSPACE }}/southbag-build-tree/out/target/product/sunfish/*.zip
+            ${{ env.RUNNER_WORKSPACE }}/southbag-build-tree/out/target/product/sunfish/boot.img
+          if-no-files-found: warn
