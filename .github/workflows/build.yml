@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run static validation
-        run: tests/validate.sh
+        run: bash tests/validate.sh
 
   # Actual OS build. An AOSP/LineageOS build needs ~64 GB RAM and ~400 GB of
   # SSD storage, far beyond any GitHub-hosted runner, so this job runs only
@@ -31,7 +31,7 @@ jobs:
           chmod +x ~/bin/repo
           echo "$HOME/bin" >> "$GITHUB_PATH"
       - name: Sync and build
-        run: scripts/build.sh "$RUNNER_WORKSPACE/southbag-build-tree"
+        run: bash scripts/build.sh "$RUNNER_WORKSPACE/southbag-build-tree"
       - name: Upload images
         uses: actions/upload-artifact@v4
         with:
