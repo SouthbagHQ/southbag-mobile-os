@@ -1,0 +1,7 @@
+# Southbag Mobile OS system properties (Pixel 4a / sunfish only).
+# Included via TARGET_PRODUCT_PROP in config/common.mk.
+ro.southbag.version=0.1.0
+ro.southbag.base=lineage-24.0
+ro.southbag.device=sunfish
+ro.southbag.ceo=Kevin
+ro.southbag.motto=Kevin is watching
